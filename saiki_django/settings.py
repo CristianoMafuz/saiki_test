@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-_llg%7#7w$!nt)u&@qlga$(@l(y9v))iye46*5@_%w4souu6ha
 DEBUG = True
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ["saiki-test-bdcg.onrender.com"]
+ALLOWED_HOSTS = ["saiki-test-bdcg.onrender.com", "localhost"]
 
 
 # Application definition
@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    # "whitenoise.middleware.WhiteNoiseMiddleware",
 
     # Cors
     'corsheaders.middleware.CorsMiddleware',
@@ -142,7 +142,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 #     path.join(BASE_DIR, "../frontend/"),
 # ]
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -160,6 +160,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS: list[str] = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "saiki-test-bdcg.onrender.com",
 ]
 
 # Allow cookies to be sent
