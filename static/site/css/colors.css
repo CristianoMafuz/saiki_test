@@ -1,0 +1,23 @@
+:root {
+    --bg-gradient: linear-gradient(90deg,rgba(3, 0, 105, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
+    --backgorund: #1e1f26;
+    --info-color: #dce7fc;
+    --highlight-color: #ffe347;
+    --correct-color: #20cf80;
+    --partial-color: #ffe347;
+    --wrong-color: #ce0030;
+
+    --text-color: #ffffff;
+    --primary-text: #e6e6e6;
+    --secondary-text: #1e1f26;
+
+    --input-background: #ccc;
+    --input-background-focus: #ddd;
+
+    --separator: #323337;
+}
+
+.correct-color { background-color: var(--correct-color); }
+.partial-color { background-color: var(--partial-color); }
+.wrong-color { background-color: var(--wrong-color); }
+.highlight-color { background-color: var(--highlight-color); color: black; }

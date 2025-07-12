@@ -1,0 +1,37 @@
+@import url("animations.css");
+
+:root{
+    --milvus-color: #00b3ff;
+    --pokemon-bg-color: #d9d607;
+    --pokemon-border-color: #0303ab;
+}
+
+.milvus-dialog {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  font-size: xx-large;
+  background: var(--milvus-color);
+  height: 30vh;
+  width: 30%;
+  border-radius: 20px;
+  animation: emergir 0.8s ease-out forwards;
+}
+
+.pokemon-dialog {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  font-size: xx-large;
+  background: var(--pokemon-bg-color);
+  border-color: var(--pokemon-border-color);
+  border-width: 5px;
+  border-radius: 20px;
+  height: 30vh;
+  width: 30%;
+  animation: emergir 0.8s ease-out forwards;
+}
