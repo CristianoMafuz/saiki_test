@@ -135,7 +135,7 @@ STATIC_URL = "/static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR.parent, 'static')]
 # STATICFILES_DIRS = [
 #     path.join(BASE_DIR, "../frontend/"),
 # ]
