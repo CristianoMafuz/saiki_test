@@ -56,6 +56,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+
     # Cors
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -139,6 +141,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # STATICFILES_DIRS = [
 #     path.join(BASE_DIR, "../frontend/"),
 # ]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
