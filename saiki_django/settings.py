@@ -160,10 +160,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS: list[str] = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    "saiki-test-bdcg.onrender.com",
 ]
 
 # Allow cookies to be sent
 CORS_ALLOW_CREDENTIALS: bool = True
 SESSION_COOKIE_SECURE: bool = False     # HTTP
-
