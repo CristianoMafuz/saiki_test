@@ -1,1 +1,9 @@
-ÿþ
+whitenoise
+Django==5.2.4
+django-cors-headers==4.7.0
+json5==0.9.25
+jsonpointer==3.0.0
+jsonschema==4.23.0
+jsonschema-specifications==2023.12.1
+uvicorn==0.30.0
+gunicorn==21.2.0
