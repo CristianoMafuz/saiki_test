@@ -119,7 +119,9 @@ class Guesser(object):
 
         from os import path
 
-        data_path: str = path.join(path.dirname(__file__), "../../frontend/site/scripts/test.json")
+        # data_path: str = path.join(path.dirname(__file__), "../../frontend/site/scripts/test.json")
+        data_path: str = path.join(path.dirname(__file__), "../static/site/scripts/test.json")
+
 
         # Currently, the database fetch is mocked.
         with open(data_path, "r", encoding="utf-8") as file:
