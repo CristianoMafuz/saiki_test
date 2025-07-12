@@ -8,7 +8,8 @@
  * @version 0.1
  */
 
-const API_BASE = "http://localhost:8000/api";
+// const API_BASE = "http://localhost:8000/api";
+const API_BASE = "saiki-test-bdcg.onrender.com/api";
 
 export async function api(endpoint, method = "GET", body = null) {
 	const options = {
