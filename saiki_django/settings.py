@@ -29,7 +29,8 @@ SECRET_KEY = 'django-insecure-_llg%7#7w$!nt)u&@qlga$(@l(y9v))iye46*5@_%w4souu6ha
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["saiki-test-bdcg.onrender.com"]
 
 
 # Application definition
