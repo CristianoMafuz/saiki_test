@@ -1,0 +1,17 @@
+<h2>Login do Jogador</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Entrar</button>
+</form>
+
+<p>Não tem conta? <a href="{% url 'jogador_register' %}">Cadastre-se aqui</a></p>
+
+{% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}

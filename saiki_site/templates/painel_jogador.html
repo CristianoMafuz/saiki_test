@@ -1,0 +1,67 @@
+<!-- templates/painel_jogador.html -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Painel do Jogador</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .info {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+        .info p {
+            margin: 12px 0;
+            font-size: 1.1em;
+        }
+        .label {
+            font-weight: bold;
+            color: #555;
+        }
+        .message {
+            text-align: center;
+            padding: 15px;
+            background-color: #ffdddd;
+            border: 1px solid #dd5555;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: #900;
+        }
+    </style>
+</head>
+<body>
+    {% if jogador %}
+        <h1>Bem-vindo, {{ jogador.name_public }}!</h1>
+        <div class="info">
+            <p><span class="label">Nome de Usuário:</span> {{ jogador.name_user }}</p>
+            <p><span class="label">Email:</span> {{ jogador.name_email }}</p>
+            <p><span class="label">Último Login:</span> {{ jogador.last_login|date:"d/m/Y H:i:s" }}</p>
+            <p><span class="label">Status:</span>
+                {% if jogador.status %}
+                    Ativo
+                {% else %}
+                    Inativo
+                {% endif %}
+            </p>
+        </div>
+    {% else %}
+        <div class="message">
+            Jogador não encontrado ou não está logado.
+        </div>
+    {% endif %}
+</body>
+</html>

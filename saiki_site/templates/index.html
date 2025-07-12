@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saiki - Algoritmo do Dia</title>
+  <link rel="stylesheet" href="/static/site/css/style.css">
+
+  <!-- katex dependencies -->
+  <link rel="stylesheet" href="/static/dependencies/katex/katex.min.css">
+  <script defer src="/static/dependencies/katex/katex.min.js"></script>
+  <script defer src="/static/dependencies/katex/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body);"></script>
+
+  <!-- translate -->
+  <script src="/static/site/scripts/locales.js"></script>
+  <script src="https://unpkg.com/i18next@22.4.10/i18next.min.js"></script>
+</head>
+
+<body>
+
+  <!-- translate -->
+  <select class="translateBox">
+    <option value="pt">Português</option>
+    <option value="en">English</option>
+  </select>
+
+  <!-- TODO: Add Navigation Bar (To select Entity type, etc.) -->
+
+  <header class="app-header">
+    <a href="/">
+      <img src="/static/assets/img_saiki_logo.svg" class="saiki-logo" alt="Saiki">
+    </a>
+  </header>
+  
+  <h2>Qual é o algoritmo do dia?</h2>
+  <input type="text" placeholder="Escreva aqui" class="Input">
+
+  <!-- Label for players -->
+  <div class="attempts">
+    <div class="attempts-label">Tentativas: </div> <div class="attempts-field">0</div>
+  </div>
+  
+  <ul class="hint-labels">
+    <li>Categoria</li>
+    <li>Ano</li>
+    <li>Complexidade Temporal Média</li>
+    <li>Complexidade Espacial Auxiliar</li>
+    <li>Estrutura de Dados</li>
+    <li>Solução</li>
+    <li>Generalidade</li>
+  </ul>
+  
+  <!-- Div de ancoragem para os novos card's -->
+  <div class="cards-container"></div>
+
+  <!-- Info -->
+  <button class="footer-info">i</button>
+
+  <dialog class="infoDialog">
+    <h1 class="howToPlayTitle">Como jogar</h1>
+    <p class="howToPlayDesc">Você deve adivinhar o algoritmo do dia se baseando nas pistas.</p> 
+    
+    <h2 class="categoryTitle">Categoria</h2>
+    <p class="categoryText">
+      O tipo ou propósito geral do algoritmo.
+      Ex: ordenação, busca, grafos, otimização, geometria computacional.
+    </p>
+
+    <h2 class="yearTitle">Ano</h2>
+    <p class="yearText">
+      Ano de criação ou publicação do algoritmo.
+      Refere-se ao momento em que o algoritmo foi proposto ou documentado pela primeira vez.
+    </p>
+
+    <h2 class="timeTitle">Complexidade Temporal Média</h2>
+    <p class="timeText">
+      Tempo esperado que o algoritmo leva para executar em casos comuns.
+      Representada em notação Big-O: O(n), O(n log n), etc.
+    </p>
+
+    <h2 class="spaceTitle">Complexidade Espacial Auxiliar</h2>
+    <p class="spaceText">
+      Memória extra necessária além da entrada original.
+      Também expressa em Big-O, como O(1), O(n).
+      Não conta a memória ocupada pelos dados de entrada.
+    </p>
+
+    <h2 class="structureTitle">Estrutura de Dados</h2>
+    <p class="structureText">
+      As estruturas usadas para processar a informação.
+      Ex: listas, filas, pilhas, árvores, heaps, tabelas hash.
+    </p>
+
+    <h2 class="solutionTitle">Solução</h2>
+    <p class="solutionText">
+      Tipo de abordagem adotada pelo algoritmo.
+      Exata: resolve o problema com resposta correta garantida.
+      Aproximada: gera uma solução próxima da ideal (usado em problemas complexos como NP-difíceis).
+      Heurística: usa regras práticas para encontrar soluções boas, mas não garantidas.
+    </p>
+
+    <h2 class="generalityTitle">Generalidade</h2>
+    <p class="generalityText">
+      O algoritmo soluciona qualquer tipo de problema dentro da sua categoria ou ele exige certas condições
+      para apresentar uma resolução válida?
+      Exemplo:
+      BubbleSort ordena quaisquer vetores desordenados, sem restrições. (Geral)
+      RadixSort só pode ordenar vetores de números inteiros. (Específica)
+    </p>
+    
+    <button class="closeDialog" aria-label="Fechar">&times;</button>
+  </dialog>
+
+
+  <script type="module" src="/static/site/scripts/main.js"></script>
+</body>
+
+</html>

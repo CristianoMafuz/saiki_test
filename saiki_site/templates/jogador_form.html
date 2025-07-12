@@ -1,0 +1,37 @@
+<!-- templates/jogador_form.html -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <title>Criar Jogador</title>
+</head>
+<body>
+    <h1>Criar Jogador</h1>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        
+        {{ form.non_field_errors }}
+
+        <table>
+            {% for field in form %}
+                <tr>
+                    <th>{{ field.label_tag }}</th>
+                    <td>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <br><small>{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p style="color: red;">{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+</html>
