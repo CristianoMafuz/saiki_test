@@ -14,6 +14,6 @@ urlpatterns: list[URLPattern | URLResolver] = [
     path('admin/', admin.site.urls),
 
     # Derived URL configurations
-    # path("", include("saiki_site.urls"))
-    path('', TemplateView.as_view(template_name="index.html")),
+    path("", include("saiki_site.urls"))
+    # path('', TemplateView.as_view(template_name="index.html")),
 ]
