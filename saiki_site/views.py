@@ -28,8 +28,9 @@ class FrontendView(object):
         print(type(req), req)
 
         # the html source
-        index_path: str = path.join(path.dirname(__file__), "../../frontend/site/html/index.html")
-
+        # index_path: str = path.join(path.dirname(__file__), "../../frontend/site/html/index.html")
+        index_path: str = path.join(path.dirname(__file__), "../static/site/scripts/test.json")
+        
         # opening and sending the HTML over
         with open(index_path, encoding="utf-8") as index:
             return HttpResponse(index.read(), content_type="text/html")
