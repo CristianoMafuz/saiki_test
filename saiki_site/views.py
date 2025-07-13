@@ -29,7 +29,7 @@ class FrontendView(object):
 
         # the html source
         # index_path: str = path.join(path.dirname(__file__), "../../frontend/site/html/index.html")
-        index_path: str = path.join(path.dirname(__file__), "../static/site/scripts/test.json")
+        index_path: str = path.join(path.dirname(__file__), "../static/site/html/index.html")
         
         # opening and sending the HTML over
         with open(index_path, encoding="utf-8") as index:
