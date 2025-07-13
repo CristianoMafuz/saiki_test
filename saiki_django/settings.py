@@ -142,9 +142,13 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 #     path.join(BASE_DIR, "../frontend/"),
 # ]
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 print("BASE_DIR =", BASE_DIR)
 print("STATICFILES_DIRS =", STATICFILES_DIRS)
