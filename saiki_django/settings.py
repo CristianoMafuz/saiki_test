@@ -30,7 +30,8 @@ SECRET_KEY = 'django-insecure-_llg%7#7w$!nt)u&@qlga$(@l(y9v))iye46*5@_%w4souu6ha
 DEBUG = True
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ["saiki-test-bdcg.onrender.com", "localhost"]
+# ALLOWED_HOSTS = ["saiki-test-bdcg.onrender.com", "localhost"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
