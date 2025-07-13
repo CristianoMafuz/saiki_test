@@ -21,7 +21,7 @@ export async function api(endpoint, method = "GET", body = null) {
   	}
 
   	// const res = await fetch(`${API_BASE}${endpoint}`, options);
-  	const res = await fetch(`${endpoint}`, options);
+  	const res = await fetch(`api/${endpoint}`, options);
 
   	if (!res.ok) {
     	const err = await res.json().catch(() => ({}));
