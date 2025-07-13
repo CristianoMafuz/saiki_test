@@ -8,8 +8,7 @@
  * @version 0.1
  */
 
-// const API_BASE = "http://localhost:8000/api";
-const API_BASE = "saiki-test-bdcg.onrender.com/api";
+const API_BASE = "http://localhost:8000/api";
 
 export async function api(endpoint, method = "GET", body = null) {
 	const options = {
@@ -21,7 +20,9 @@ export async function api(endpoint, method = "GET", body = null) {
     	options.body = JSON.stringify(body);
   	}
 
-  	const res = await fetch(`${API_BASE}${endpoint}`, options);
+  	// const res = await fetch(`${API_BASE}${endpoint}`, options);
+  	const res = await fetch(`${endpoint}`, options);
+
   	if (!res.ok) {
     	const err = await res.json().catch(() => ({}));
     	throw new Error(err.detail || Error `${res.status}`);
