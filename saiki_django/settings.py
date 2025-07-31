@@ -25,8 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ao caminho de busca do Python.
 import sys
 import os
-sys.path.insert(0, os.path.dirname(BASE_DIR))
-
+sys.path.insert(0, str(BASE_DIR))
 
 
 
