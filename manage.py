@@ -2,6 +2,11 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+import pathlib
+
+
+BASE = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(BASE))
 
 
 def main():

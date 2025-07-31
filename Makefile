@@ -13,8 +13,9 @@
 # Structure
 # ---------
 
-dir_backend 	:= src/backend/
-DJANGO_MANAGE	:= $(dir_backend)manage.py
+dir_backend 			:= src/backend/
+DJANGO_MANAGE			:= $(dir_backend)manage.py
+DJANGO_MANAGE_MODULE	:= src.backend.manage
 
 
 
@@ -27,7 +28,8 @@ run-uvicorn:
 
 # Running the Django server
 run-django:
-	@$(PYTHON) $(DJANGO_MANAGE) runserver
+	@$(PYTHON) -m $(DJANGO_MANAGE_MODULE) runserver
+# @$(PYTHON) $(DJANGO_MANAGE) runserver
 
 # Run migrations: makemigrations + migrate
 django-migrate:
