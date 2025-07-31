@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Adiciona a pasta raiz do projeto (que contém "core", "saiki_site", etc.)
 # ao caminho de busca do Python.
-sys.path.insert(0, str(BASE_DIR.parent))  # /opt/render/project/src/
+sys.path.insert(0, str(BASE_DIR / "core"))
 
 
 
