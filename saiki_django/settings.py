@@ -80,8 +80,10 @@ ROOT_URLCONF = 'saiki_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / '..' / 'frontend' / 'site' / 'html' / 'templates',
-                 BASE_DIR / '..' / 'frontend' / 'site' / 'html'],
+        # 'DIRS': [BASE_DIR / '..' / 'frontend' / 'site' / 'html' / 'templates',
+        #          BASE_DIR / '..' / 'frontend' / 'site' / 'html'],
+        'DIRS': [BASE_DIR / 'static' / 'site' / 'html' / 'templates',
+                 BASE_DIR / 'static' / 'site' / 'html'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
