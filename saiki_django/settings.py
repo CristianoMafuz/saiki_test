@@ -18,6 +18,18 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
+
+
+
+# Adiciona a pasta raiz do projeto (que contém "core", "saiki_site", etc.)
+# ao caminho de busca do Python.
+sys.path.insert(0, str(BASE_DIR))
+
+
+
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -43,7 +55,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     # Saiki APPs.
-    "saiki_site", "saiki_data", "core",
+    "saiki_site", "saiki_data",
 ]
 
 MIDDLEWARE = [
