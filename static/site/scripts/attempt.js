@@ -1,141 +1,105 @@
 /** 
- * @file frontend/site/script/attempt.js
+ * @file frontend/site/scripts/attempt.js
  * 
  * @author AndreiCristeli
  * @author victorxaviercosta
+ * @author HexagonalUniverse
  * 
- * @version 0.1
+ * @version 0.2
  */
 
 import { api } from "./api.js"
-import { input_keydown, new_game_click } from "./input_handler.js"; 
+// import { InputHandler } from "./input_handler.js"; 
+import { Renderer } from "./renderer.js"
 
-let number_attempts = 0; // Temporaly saved as a global shared variable.
-let victory = false; // Temporaly saved as a global shared variable.
 // TODO: Structure a frontend Player data-structure.
 
-import { render_card } from "./renderer.js"
-
+/** Return Codes for the attempts processing */
 export const ATTEMPT_RC = {
-    SUCCESS: 0,
-    REPEATED_ANSWER: 1,
-    NOT_FOUND: 2,
-    VICTORY: 3
+    SUCCESS: 0,         // Attempt successfully processed.
+    REPEATED_ANSWER: 1, // The attempt is a repeated entry.
+    NOT_FOUND: 2,       // Entity not found in db.
+    VICTORY: 3,         // The attempt result's in player's Victory.
 };
 
-async function __backend_attempt(user_input, entity_type){
-    // Search in database passing entity_type and user_input.
+export class AttemptsHandler {
+    constructor(renderer){
+        this.number_attempts = 0;
+        this.div_attempts = document.querySelector('.attempts-field');
 
-    let attempt;
-    try{
-        attempt = await api("/guess/entity/", "POST", { entity : user_input });
-    } catch(error){
-        console.log(error);
+        this.renderer = renderer
     }
 
-    return attempt;
-}
+    /** Updates the attempts count variable as well as the page's attempts counter element. */
+    #attempt_count_update() {
+        ++ this.number_attempts;
+        this.div_attempts.textContent = `${this.number_attempts}`;
+    }
+    
+    /** Loads the attempt game state screen. 
+        Called on page-show. */
+    load_game_state_screen(event, __on_load_response) {
+        this.renderer.render_collection(__on_load_response["entities"]);
+        this.number_attempts = __on_load_response["tries"] - 1;
+    
+        this.#attempt_count_update();
+    }
 
-export function verify_repeat(user_input){
-    const card_container = document.querySelector('.cards-container');
-
-    for(let card of card_container.children){
-        if(card.querySelector(".card-header").textContent.toLowerCase() === user_input){
-            return true;
+    /** Executes a backend attempt request and gets it's response */
+    async #__backend_attempt(user_input, entity_type) {
+        // Search in database passing entity_type and user_input.
+    
+        let attempt;
+        try{
+            attempt = await api("/guess/entity/", "POST", { entity : user_input });
+        } catch(error){
+            console.log(error);
         }
-    }
-
-    return false;
-}
-
-export async function process_attempt(user_input, div_attempts, entity_type){
-    if (verify_repeat(user_input)){
-        return ATTEMPT_RC.REPEATED_ANSWER;
-    }
-
-    // Call back_end attempt process_logic.
-    let attempt = await __backend_attempt(user_input, entity_type);
-    if(Object.keys(attempt).length === 0) {
-        return ATTEMPT_RC.NOT_FOUND; // Entity not found in db.
-    }
-
-    // TODO: Treat invalid entry case.
-    // Idea: Only call process_attempt if there's a 'first suggestion' when Suggestion is implemented.
-
-    // Updating attempt count.
-    number_attempts++;
-    div_attempts.textContent = `${number_attempts}`;
     
-    // Get player victory logic from backend.
-    let card_class = `card ${attempt.type}`;
-    console.log(`Card Class = ${card_class}`);
-
-    // Add a new card corresponding to user's attempt.
-    
-    render_card(attempt, card_class);
-
-    if(attempt.type === "correct"){
-        victory = true;
-        return ATTEMPT_RC.VICTORY;
+        return attempt;
     }
 
-    return ATTEMPT_RC.SUCCESS;
-}
-
-export function win_condition(input) {
-  input.disabled = true;
-
-  /*
-  Diary mode
-  input.style.border = "2px solid green";
-  input.style.backgroundColor = "#e0ffe0";
-  input.style.color = "#004400";
-  input.placeholder = "Parabéns! Você venceu! 🎉";
-  */
-
-  const div = document.createElement("div");
-  div.textContent = "Parabéns! Você venceu! 🎉";
-  div.className = "div_new_game"; // Se quiser estilizar com CSS
-
-  const btn = document.createElement("button");
-  btn.textContent = "Novo Jogo";
-  btn.className = "btn_new_game";
-  btn.addEventListener("click", (event) => new_game_click(event, btn));
-
-  // Adicionar o botão à div
-  div.appendChild(btn);
-  input.parentNode.replaceChild(div, input);
-}
-
-export function reset_game(container, div_attempts) {
-  const new_input = document.createElement("input");
-  new_input.type = "text";
-  new_input.className = "Input";
-  new_input.placeholder = "Escreva aqui";
-  new_input.autocomplete = "off";
-
-  container.parentNode.replaceChild(new_input, container);
-
-  // Resetar variáveis de controle
-  number_attempts = 0;
-  victory = false;
-
-  if (div_attempts) {
-    div_attempts.textContent = `${number_attempts}`;
-  }
-
-  const cardsContainer = document.querySelector(".cards-container");
-  if (cardsContainer) {
-    cardsContainer.innerHTML = "";
-  }
-
-  new_input.disabled = false;
-  new_input.value = "";
-
-  new_input.addEventListener("keydown", (event) =>
-    input_keydown(event, new_input, div_attempts)
-  );
-
-  // Se houver função para iniciar jogo, chame aqui:
-  // start_new_game();
+    /** Verifies possible repeated entry by the user */
+    verify_repeat(user_input){
+        const card_container = document.querySelector('.cards-container');
+        
+        // Sequentially verifying if there's any card matching user's input.
+        for(let card of card_container.children){
+            if(card.querySelector(".card-header").textContent.toLowerCase() === user_input){
+                return true;
+            }
+        }
+    
+        return false;
+    }
+    
+    /** Handles all the attempt processing logic. */
+    async process_attempt(user_input, entity_type){
+        if (this.verify_repeat(user_input)){
+            return ATTEMPT_RC.REPEATED_ANSWER;
+        }
+    
+        let attempt = await this.#__backend_attempt(user_input, entity_type);
+    
+        // Validating Backend's response.
+        if(Object.keys(attempt).length === 0) {
+            return ATTEMPT_RC.NOT_FOUND;
+        }
+    
+        // TODO: Treat invalid entry case.
+        // Idea: Only call process_attempt if there's a 'first suggestion' when Suggestion is implemented.
+    
+        // Incrementing attempts counter.
+        this.#attempt_count_update(this.div_attempts);
+    
+        // Adding a new card corresponding to user's attempt.
+        this.renderer.render_card(attempt);
+    
+        // Validating player's victory.
+        if (attempt.guessed === "correct") {
+            return ATTEMPT_RC.VICTORY;
+        }
+        
+        return ATTEMPT_RC.SUCCESS;
+    }
 }

@@ -1,0 +1,60 @@
+<!-- templates/jogador_form.html -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/static/site/css/style.css">
+    <title>Criar Jogador</title>
+</head>
+<body>
+    
+    <header class="app-header register">
+        <a href="/">
+        <img src="/static/assets/img_saiki_logo.svg" class="saiki-logo" alt="Saiki">
+        </a>
+    </header>
+
+    <section class="form">
+        <div class="form-widget">
+            <h2>Registrar Jogador</h2>
+            
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                {{ form.non_field_errors }}
+                
+                <div class="login-form-contents">
+                    <table>
+                        {% for field in form %}
+                        <tr>
+                            <!--
+                            <th>
+                                {{ field.label_tag }}
+                                {% for error in field.errors %}
+                                <p></p>
+                                {% endfor %}
+                            </th>
+                            -->
+                            <td class="login-form-td">
+                                {{ field }}
+                                {% if field.help_text %}
+                                <br><small>{{ field.help_text }}</small>
+                                {% endif %}
+                                <p style="color: red; font-size: small; margin: 0%;">
+                                    {% for error in field.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    
+                    <button type="submit" class="login-form-confirm-btn">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

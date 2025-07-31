@@ -9,8 +9,11 @@
 const resources = {
   pt: {
     translation: {
-      title: "Saiki",
-      question: "Qual é o algoritmo do dia?",
+      diary: "Diário",
+      trueOrFalse: "Verdadeiro ou Falso",
+      custom: "Personalizado",
+      index_question: "Qual é o algoritmo do dia?",
+      custom_question: "Qual é o algoritmo?",
       inputPlaceholder: "Escreva aqui",
       attempts: "Tentativas: ",
       howToPlay: "Como jogar",
@@ -33,8 +36,11 @@ const resources = {
   },
   en: {
     translation: {
-      title: "saiki",
-      question: "What is today's algorithm?",
+      diary: "Daily",
+      trueOrFalse: "True or False",
+      custom: "Custom",
+      index_question: "What is today's algorithm?",
+      custom_question: "What is the algorithm?",
       inputPlaceholder: "Type here",
       attempts: "Attempts: ",
       howToPlay: "How to play",

@@ -8,7 +8,7 @@
   background: #e0ffe0;
   border: 2px solid black;
   border-radius: 20px;
-  width: 90%;
+  width: 40vw;
   max-width: 400px;
   text-align: center;
   justify-content: center;
@@ -16,7 +16,7 @@
 }
 
 .btn_new_game {
-  background-color: #4CAF50;
+  background-color: var(--confirm-color);
   color: white;    
   border: none;
   width: 45%; 

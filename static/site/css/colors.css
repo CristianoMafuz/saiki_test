@@ -4,8 +4,11 @@
     --info-color: #dce7fc;
     --highlight-color: #ffe347;
     --correct-color: #20cf80;
-    --partial-color: #ffe347;
+    /*--partial-color: #d79402;*/
+    --partial-color: #cea500;
     --wrong-color: #ce0030;
+    
+    --confirm-color: #4CAF50;
 
     --text-color: #ffffff;
     --primary-text: #e6e6e6;
@@ -15,6 +18,10 @@
     --input-background-focus: #ddd;
 
     --separator: #323337;
+    --bg-hints-container: #323337b5;
+    --bg-hints: #1b1b1cb6;
+
+    --forms-border-gradient: linear-gradient(45deg, rgba(0, 212, 255, 1), rgba(9, 9, 121, 1), rgba(3, 0, 105, 1), rgba(0, 212, 255, 1));
 }
 
 .correct-color { background-color: var(--correct-color); }

@@ -1,0 +1,22 @@
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  bottom: 0px;
+  position: fixed;
+  align-items: center;
+  width: 100vw;
+}
+
+
+.translateBox {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  background: #ddd;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  margin-right: 10px;
+}

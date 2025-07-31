@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sessão {{ sessao.id }}</title>
+    <style>
+        body { font-family: Arial; max-width: 700px; margin: auto; background: #f4f4f4; padding: 20px; }
+        h1 { text-align: center; }
+        .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .chat { max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-top: 10px; background: #fafafa; }
+        .message { margin-bottom: 10px; }
+        .bold { font-weight: bold; }
+        .btn { padding: 10px 20px; background: #cc3333; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .btn:hover { background: #aa2222; }
+    </style>
+</head>
+<body>
+
+    <h1>Sessão #{{ sessao.id }}</h1>
+
+    <div class="card">
+        <p><span class="bold">Chave Pública:</span> {{ sessao.public_key }}</p>
+
+        <p><span class="bold">Status:</span>
+            {% if sessao.status %}
+                Ativa
+            {% else %}
+                Encerrada
+            {% endif %}
+        </p>
+
+        <p><span class="bold">Tempo:</span> {{ tempo_corrente }}</p>
+
+        <p><span class="bold">Jogadores Ativos:</span></p>
+        <ul>
+            {% for p in sessao.active_players.all %}
+                <li>{{ p.name_public }}</li>
+            {% endfor %}
+        </ul>
+
+        {% if jogador.user == sessao.root_player.user and sessao.status %}
+        <form method="post" action="{% url 'encerrar_sessao' sessao.id %}">
+            {% csrf_token %}
+            <button class="btn" type="submit">Encerrar Sessão</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h3>Chat</h3>
+        <div class="chat">
+            {% for msg in mensagens %}
+                <div class="message">
+                    <span class="bold">{{ msg.sender.name_user }}</span>: {{ msg.texto }}
+                    <br><small>{{ msg.timestamp|date:"d/m/Y H:i" }}</small>
+                </div>
+            {% empty %}
+                <p>Nenhuma mensagem ainda.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Chat</h3>
+        <div class="chat">
+            {% for msg in mensagens %}
+                <div class="message">
+                    <span class="bold">{{ msg.sender.name_user }}</span>: {{ msg.texto }}
+                    <br><small>{{ msg.timestamp|date:"d/m/Y H:i" }}</small>
+                </div>
+            {% empty %}
+                <p>Nenhuma mensagem ainda.</p>
+            {% endfor %}
+        </div>
+
+        {% if sessao.status %}
+        <form method="post" style="margin-top:15px;">
+            {% csrf_token %}
+            {{ form.texto }}
+            <button type="submit" class="btn" style="margin-top:5px;">Enviar</button>
+        </form>
+        {% else %}
+        <p>A sessão está encerrada. Não é possível enviar mensagens.</p>
+        {% endif %}
+    </div>
+
+
+</body>
+</html>

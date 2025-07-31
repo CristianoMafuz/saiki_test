@@ -1,0 +1,32 @@
+{% if jogador %}
+    <h1>Bem-vindo, {{ jogador.name_public }}!</h1>
+    <div class="info">
+        <p><span class="label">Nome de Usuário:</span> {{ jogador.name_user }}</p>
+        <p><span class="label">Email:</span> {{ jogador.name_email }}</p>
+        <p><span class="label">Último Login:</span> {{ jogador.last_login|date:"d/m/Y H:i:s" }}</p>
+        <p><span class="label">Status:</span>
+            {% if jogador.status %}
+                Ativo
+            {% else %}
+                Inativo
+            {% endif %}
+        </p>
+    </div>
+
+    <form method="post" action="{% url 'criar_sessao' %}" style="margin-top: 30px;">
+        {% csrf_token %}
+        <button type="submit" style="padding: 10px 20px; font-size: 1em;">Criar Nova Sessão</button>
+    </form>
+    <form method="post" action="{% url 'entrar_sessao' %}" style="margin-top: 20px;">
+    {% csrf_token %}
+    <label for="chave">Entrar em uma Sessão:</label><br>
+    <input type="text" name="chave_publica" id="chave" placeholder="Digite a chave pública" required style="padding: 5px; width: 100%; max-width: 300px;">
+    <br>
+    <button type="submit" style="margin-top: 10px; padding: 8px 16px;">Entrar</button>
+    </form>
+
+{% else %}
+    <div class="message">
+        Jogador não encontrado ou não está logado.
+    </div>
+{% endif %}

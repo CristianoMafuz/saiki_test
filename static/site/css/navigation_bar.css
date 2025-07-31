@@ -1,1 +1,42 @@
 /* TODO: Add navigation bar styles here. */
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100vw;
+  height: 40px;
+  background-color: whitesmoke;
+  color: black;
+}
+
+.select-mode {
+  display: flex;
+  list-style: none;
+  gap: 4rem;
+  margin-left: 1.3rem;
+}
+
+.select-mode a {
+  text-decoration: none;
+  color: black;
+}
+
+/* Tem que zoiar isso aqui */
+.menu-item{
+  opacity: 70%;
+  cursor: pointer;
+}
+
+.menu-item:hover{
+  opacity: 100%;
+  cursor: pointer;
+}
+
+.menu-item.active {
+  opacity: 100%;
+  font-weight: bold;
+  pointer-events: none;  
+  cursor: default;
+}

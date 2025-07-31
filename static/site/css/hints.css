@@ -1,0 +1,46 @@
+@import url("colors.css");
+
+.input-hint {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    position: relative;
+}
+
+.hints {
+    background-color: var(--bg-hints-container);
+    position: absolute;
+    top: 4rem;
+    box-shadow: 0 5px 10px #0003;
+    padding: .5rem;
+    width: 100%;
+    margin-top: 3px;
+    z-index: 999;
+    border-radius: 5px;
+}
+
+.hint_item {
+    background-color: #00000000;
+    text-align: left;
+    cursor: pointer;
+    text-transform: capitalize;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 700;
+    border-radius: 5px;
+    padding: .5rem;
+}
+
+.hint_item.selected {
+    background-color: var(--bg-hints);
+    color: rgb(175, 207, 235);
+    text-align: left;
+    cursor: pointer;
+    text-transform: capitalize;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 700;
+    border-radius: 5px;
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saiki - Algoritmo do Dia</title>
+  <title>Saiki - Verdadeiro ou Falso</title>
   <link rel="stylesheet" href="/static/site/css/style.css">
   <link rel="shortcut icon" href="/static/assets/favicon.ico" type="image/x-icon">
 
@@ -18,14 +18,14 @@
   <script src="https://unpkg.com/i18next@22.4.10/i18next.min.js"></script>
 </head>
 
-<body data-page="diary">
+<body data-page="true_or_false">
 
   <!-- TODO: Add Elements in Navigation Bar (To select Entity type, for exemple.) -->
   <nav class="menu">
     <ul class="select-mode">
-      <li class="menu-item diaryText" data-page="diary"><a href="/daily">Diário</a></li>
-      <li class="menu-item trueOrFalseText" data-page="true_or_false"><a href="/tof">Verdadeiro ou Falso</a></li>
-      <li class="menu-item customText" data-page="custom"><a href="/custom">Personalizado</a></li>
+      <li class="menu-item diaryText" data-page="diary"><a href="/static/site/html/index.html">Diário</a></li>
+      <li class="menu-item trueOrFalseText" data-page="true_or_false"><a href="/static/site/html/trueOrFalse.html">Verdadeiro ou Falso</a></li>
+      <li class="menu-item customText" data-page="custom"><a href="/static/site/html/custom.html">Personalizado</a></li>
     </ul>
   </nav>
 
@@ -38,30 +38,13 @@
     <button class="footer-info">?</button>
   </header>
   
-  <!--  -->
-  <h2 class="index_question">Qual é o algoritmo do dia?</h2>
-  
-  <!-- Input and Hints Container -->
-  <div class="input-hint">
-    <input type="text" placeholder="Escreva aqui" class="Input">
+  <h2>É verdade ou mentira?</h2>
+
+  <div class="div_choice">
+    <button class="button_choice">Verdá</button>
+    <button class="button_choice">Fá</button>
   </div>
-  
-  <!-- Label for players -->
-  <div class="attempts">
-    <div class="attempts-label">Tentativas: </div> <div class="attempts-field">0</div>
-  </div>
-  
-  <!-- Entity attributes labels -->
-  <ul class="hint-labels">
-    <li>Categoria</li>
-    <li>Ano</li>
-    <li>Complexidade Temporal Média</li>
-    <li>Complexidade Espacial Auxiliar</li>
-    <li>Estrutura de Dados</li>
-    <li>Solução</li>
-    <li>Generalidade</li>
-  </ul>
-  
+
   <!-- Ancor div for new cards -->
   <div class="cards-container"></div>
 
@@ -119,17 +102,8 @@
     </p>
     
     <button class="closeDialog" aria-label="Fechar">&times;</button>
-  </dialog>
 
-  <footer class="footer">
-    <!-- translate -->
-    <select class="translateBox">
-      <option value="pt">Português</option>
-      <option value="en">English</option>
-    </select>
-  </footer>
-
-  <script type="module" src="/static/site/scripts/main_guess.js"></script>
+  <script type="module" src="/static/site/scripts/main_true_or_false.js"></script>
 </body>
 
 </html>
