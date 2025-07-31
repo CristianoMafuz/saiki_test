@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     # Saiki APPs.
-    "saiki_site", "saiki_data",
+    "saiki_site", "saiki_data", "core",
 ]
 
 MIDDLEWARE = [
