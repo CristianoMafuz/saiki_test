@@ -6,28 +6,33 @@ backend/saiki_site/guesser.py
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
+from saiki_data.entities import HistoricalEntity
+from saiki_data.database import saiki_entities
+from core.enc import int_list_to_b64, b64_to_int_list, permute, unpermute, generate_key
 
 
 @dataclass(init=True, repr=True, eq=False, frozen=False, slots=True)
 class GuessState:
     """Represents the state of the player in the Guess game mode."""
 
-    key: str    # the player's session id
-    selected: None | int    # a pointer to the entity currently selected
+    key: str  # the player's session id
+    selected: None | int  # a pointer to the entity currently selected
     attempted: list[int]  # already guessed...
 
     @staticmethod
     def from_request(request: WSGIRequest) -> GuessState:
-        """Retrieves the Player's guessing state by the request."""
+        """Retrieves the Player's guessing state by the request.
+
+        :param request: The Django request.
+        :return: The user's guessing state. Creates a new if it doesn't identify one.
+        """
 
         key: None | str = request.COOKIES.get("key")
 
         if key is None:
-            from .enc import generate_key
             key: str = generate_key()
             assert len(key) == 64
 
@@ -45,25 +50,10 @@ class GuessState:
             if not b64_array:
                 raise TypeError
 
-            from .enc import b64_to_int_list
             attempted: list[int] = b64_to_int_list(b64_array, 4)
 
         except TypeError:
             attempted: list[int] = []
-
-        """
-        attempted: list[int] = []
-        iterator: int = 0
-        while True:
-            try:
-                attempted.append(
-                    int(request.COOKIES.get(f"attempt_{iterator}"))
-                )
-            except TypeError:
-                break
-
-            iterator += 1
-        """
 
         print(f"COOKIE GET. key: {key} ({type(key)}); selected: {selected} ({type(selected)}); attempted: {attempted}")
 
@@ -80,7 +70,7 @@ class GuessState:
             response_json.delete_cookie("key", samesite="Lax")
             response_json.delete_cookie("selected", samesite="Lax")
             response_json.delete_cookie("A#", samesite="Lax")
-            
+
             return response_json
 
         response_json.set_cookie("key", self.key, secure=False, httponly=True, samesite="Lax")
@@ -92,82 +82,191 @@ class GuessState:
             b64_v: str = int_to_base64(v, 4)
             response_json.set_cookie(f"A#", b64_v, secure=False, httponly=True, samesite="Lax")
         """
-        from .enc import int_list_to_b64
         response_json.set_cookie(f"A#", int_list_to_b64(self.attempted, 4), secure=False, httponly=True, samesite="Lax")
 
         return response_json
 
     def add_attempt(self, attempt_index: int) -> None:
+        """..."""
+
         if not isinstance(attempt_index, int):
             raise TypeError
 
-        from .enc import permute
         self.attempted.append(
             permute(attempt_index, self.key, 1000)
         )
 
         return None
 
+    @property
+    def __real_indexes(self) -> list[int]:
+        return list(map(lambda x: unpermute(x, self.key, 1000), self.attempted))
+
+    @property
+    def attempted_names(self) -> list[str]:
+        real_indexes: list[int] = self.__real_indexes
+        return list(map(
+            lambda index: saiki_entities[index]["name"], real_indexes
+        ))
+
+    def get_collection(self, _: dict) -> JsonResponse:
+        """Returns all the entity data serialized."""
+
+        real_indexes: list[int] = self.__real_indexes
+
+        # will hold the JSON data in python.
+        response_list: list[dict] = list()
+
+        # retrieving the data.
+        for index in real_indexes:
+            entity = saiki_entities[index]
+
+            response = self.__check_entity(entity_name=entity["name"])
+
+            response_list.append(
+                response
+            )
+
+        return JsonResponse({
+            "tries": len(response_list),
+            "entities": response_list,
+        })
+
+    def __check_entity(self, entity_name: str) -> dict:
+        """Checks the fields of the player's guessing. Returns the JSON format response (as a dictionary).
+
+        :param entity_name: Name of the entity being guessed.
+        :returns: Entity's guessing response in JSON format."""
+
+        # making sure the state have a selected entity.
+        guesser.select_entity(self)
+
+        # the entity that is marked to be solved by the player.
+        real_selected_index: int = unpermute(self.selected, self.key, 1000)
+        correct_entity: HistoricalEntity = saiki_entities[real_selected_index]
+
+        # the one matching what he inserted.
+        match_entity: HistoricalEntity
+        match_entity_index: int
+
+        # will hold the JSON response back to the user.
+        response: dict = {}
+
+        try:
+            match_entity, match_entity_index = guesser.fetch(entity_name)
+
+        except KeyError as ke:
+            # couldn't find the entity. returns empty.
+            print(f"COULDN'T FIND!", ke)
+            return response
+
+        # at least it was found on the database...
+        
+        response: dict = {
+            "name": match_entity["name"],
+            "data": {},
+            "guessed": "correct"
+        }
+
+        checked: dict[str, tuple[list[str], str]] = match_entity.check(correct_entity)
+
+        # iterating over the entity data fields...
+        for field, value in checked.items():
+            response["data"][field] = value
+            guess_type: str = value[1]
+
+            if response["guessed"] == "correct":
+                # if the response is correct up to now, it can potentially make the whole answer wrong.
+                response["guessed"] = guess_type
+
+            elif response["guessed"] == "partial" and guess_type != "correct":
+                # else, it can either be partial or wrong.
+                response["guessed"] = guess_type
+
+            # wrong will be wrong...
+
+        self.add_attempt(match_entity_index)
+        return response
+
+    def guess(self, entity_name: str) -> JsonResponse:
+        """Checks the fields of the player's guessing. Updates the guessing state (through the response).
+
+        :param entity_name: Name of the entity being guessed.
+        :returns: Returns the entity guessing response."""
+
+        response = self.__check_entity(entity_name)
+        response_json: JsonResponse = JsonResponse(response)
+
+        to_reset_cookies: bool = response["guessed"] == "correct" if "guessed" in response else False
+        self.set_cookie(response_json, to_reset_cookies)
+
+        return response_json
+
 
 class Guesser(object):
-    """Handles the Guess game mode inner logical structure."""
+    """Handles the `Guess` game mode inner logical structure.
 
-    __static_json_data_stream: list[dict]
+    Obs: Currently, most stateless."""
 
     def __init__(self) -> None:
         """Initializes the guesser state."""
 
-        from os import path
+        ...
 
-        # data_path: str = path.join(path.dirname(__file__), "../../frontend/site/scripts/test.json")
-        data_path: str = path.join(path.dirname(__file__), "../static/site/scripts/test.json")
+    @staticmethod
+    def fetch(entity_name: str) -> tuple[HistoricalEntity, int]:
+        """Fetches an entity by its name on the data pool. Stateless."""
 
+        entity_name: str = entity_name.lower()
+        return saiki_entities.fetch_entity(entity_name)
 
-        # Currently, the database fetch is mocked.
-        with open(data_path, "r", encoding="utf-8") as file:
-            self.__static_json_data_stream: list[dict] = json.load(file)
-
-    def fetch_entity(self, entity_name: str) -> tuple[None | dict, int]:
-        """Fetches an entity by its name on the data pool."""
-
-        for i, entity in enumerate(self.__static_json_data_stream):
-            # @TODO: to abstract and improve comparison!
-            if entity["name"].lower() == entity_name:
-                return entity, i
-
-        return None, 0
-
-    def select_entity(self, state: GuessState) -> GuessState:
+    @staticmethod
+    def select_entity(state: GuessState) -> GuessState:
         """Collapses the entity selection; chooses one from the data pool as the correct.
             :param state: The current player's guess mode state.
             :return: the new state after the selection. The parameter is modified.
+
+            As of now, it is stateless.
         """
+
         from random import randint
 
         if state.selected is not None:
             return state
 
         # choosing an entity at random; uniform distribution...
-        state.selected = randint(0, len(self.__static_json_data_stream) - 1)
+        state.selected = randint(0, len(saiki_entities) - 1)
 
         # encrypting it
-        from .enc import permute
         state.selected = permute(state.selected, state.key, 1000)
 
         return state
 
-    def get_entity(self, index: int) -> dict:
-        """Retrieves an entity by its index in the data pool.
-            :param index: The 0-based index.
-            :return: The json dictionary associated with the entity entry.
-            :raises TypeError: If the index is out of the bounds."""
-        return self.__static_json_data_stream[index]
+    @staticmethod
+    def match_name(state: GuessState, name: str) -> list[str]:
+        """Matches an entity name over the collection. Returns a list of possible results.
+
+        Stateless."""
+
+        from difflib import get_close_matches
+        from typing import Iterable
+
+        max_query_results: int = 5
+        cutoff: float = 0.35
+
+        attempt_names: list[str] = state.attempted_names
+        name_list: Iterable[str] = filter(
+            lambda x: x not in attempt_names,
+            saiki_entities    # entity names.
+        )
+        matches: list[str] = get_close_matches(name, name_list, n=max_query_results, cutoff=cutoff)
+
+        return matches
 
 
 """Global initialization"""
 
 guesser: Guesser = Guesser()
-
 
 if __name__ == "__main__":
     ...

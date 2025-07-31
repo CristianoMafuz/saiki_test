@@ -1,0 +1,184 @@
+[
+  {
+    "name": "Bubble Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1960,
+      "average_time_complexity": "O(n^2)",
+      "auxiliary_space_complexity": "O(1)",
+      "data_structure": ["Array", "List"],
+      "kind_of_solution": "Exact",
+      "generality": "General-purpose"
+    }
+  },
+  {
+    "name": "Insertion Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1950,
+      "average_time_complexity": "O(n^2)",
+      "auxiliary_space_complexity": "O(1)",
+      "data_structure": ["Array", "List"],
+      "kind_of_solution": "Exact",
+      "generality": "General-purpose"
+    }
+  },
+  {
+    "name": "Selection Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1950,
+      "average_time_complexity": "O(n^2)",
+      "auxiliary_space_complexity": "O(1)",
+      "data_structure": ["Array", "List"],
+      "kind_of_solution": "Exact",
+      "generality": "General-purpose"
+    }
+  },
+  {
+    "name": "Merge Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1945,
+      "average_time_complexity": "O(n \\log n)",
+      "auxiliary_space_complexity": "O(n)",
+      "data_structure": ["Array", "List"],
+      "kind_of_solution": "Exact",
+      "generality": "General-purpose"
+    }
+  },
+  {
+    "name": "Quick Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1960,
+      "average_time_complexity": "O(n \\log n)",
+      "auxiliary_space_complexity": "O(n)",
+      "data_structure": ["Array", "List"],
+      "kind_of_solution": "Exact",
+      "generality": "General-purpose"
+    }
+  },
+  {
+    "name": "Heap Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1964,
+      "average_time_complexity": "O(n \\log n)",
+      "auxiliary_space_complexity": "O(1)",
+      "data_structure": "Heap",
+      "kind_of_solution": "Exact",
+      "generality": "General-purpose"
+    }
+  },
+  {
+    "name": "Shell Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1959,
+      "average_time_complexity": "O(n^{1.5})",
+      "auxiliary_space_complexity": "O(1)",
+      "data_structure": ["Array", "List"],
+      "kind_of_solution": "Exact",
+      "generality": "General-purpose"
+    }
+  },
+  {
+    "name": "Counting Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1954,
+      "average_time_complexity": "O(n + k)",
+      "auxiliary_space_complexity": "O(k)",
+      "data_structure": ["Array", "List"],
+      "kind_of_solution": "Exact",
+      "generality": "Limitada"
+    }
+  },
+  {
+    "name": "Radix Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1954,
+      "average_time_complexity": "O(n \\cdot k)",
+      "auxiliary_space_complexity": "O(n + k)",
+      "data_structure": ["Array", "Buckets"],
+      "kind_of_solution": "Exact",
+      "generality": "Limitada"
+    }
+  },
+  {
+    "name": "Bucket Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1956,
+      "average_time_complexity": "O(n + k)",
+      "auxiliary_space_complexity": "O(n + k)",
+      "data_structure": ["Array", "Buckets"],
+      "kind_of_solution": "Exact",
+      "generality": "Limitada"
+    }
+  },
+  {
+    "name": "Tim Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 2002,
+      "average_time_complexity": "O(n \\log n)",
+      "auxiliary_space_complexity": "O(n)",
+      "data_structure": ["Array", "List", "Stack"],
+      "kind_of_solution": "Exact",
+      "generality": "General-purpose"
+    }
+  },
+  {
+    "name": "Gnome Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 2000,
+      "average_time_complexity": "O(n^2)",
+      "auxiliary_space_complexity": "O(1)",
+      "data_structure": ["Array", "List"],
+      "kind_of_solution": "Exact",
+      "generality": "General-purpose"
+    }
+  },
+  {
+    "name": "Comb Sort",
+    "type": "Algorithm",
+    "data": {
+      "category": "Sorting",
+      "year": 1980,
+      "average_time_complexity": "O(n^2)",
+      "auxiliary_space_complexity": "O(1)",
+      "data_structure": ["Array", "List"],
+      "kind_of_solution": "Exact",
+      "generality": "General-purpose"
+    }
+  },
+  {
+    "name": "Cocktail Sort",
+    "type": "Algorithm",
+    "data": {
+        "category": "Sorting",
+        "year": 1956,
+        "average_time_complexity": "O(n^2)",
+        "auxiliary_space_complexity": "O(1)",
+        "data_structure": ["Array", "List"],
+        "kind_of_solution": "Exact",
+        "generality": "General-purpose"
+    }
+  }
+]

@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-# from os import path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,14 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_llg%7#7w$!nt)u&@qlga$(@l(y9v))iye46*5@_%w4souu6ha'
+SECRET_KEY: str = 'django-insecure-_llg%7#7w$!nt)u&@qlga$(@l(y9v))iye46*5@_%w4souu6ha'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG: bool = True
 
-# ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = ["saiki-test-bdcg.onrender.com", "localhost"]
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS: list = ["*"]
 
 
 # Application definition
@@ -45,19 +41,22 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    "saiki_site",
+
+    # Saiki APPs.
+    "saiki_site", "saiki_data",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
     "whitenoise.middleware.WhiteNoiseMiddleware",
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 
     # Cors
     'corsheaders.middleware.CorsMiddleware',
@@ -66,11 +65,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'saiki_django.urls'
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / '..' / 'frontend' / 'site' / 'html' / 'templates',
+                 BASE_DIR / '..' / 'frontend' / 'site' / 'html'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,26 +81,34 @@ TEMPLATES = [
     },
 ]
 
-TEMPLATES[0]['DIRS'] = [os.path.join(BASE_DIR, 'saiki_site', 'templates')]
-
-WSGI_APPLICATION = 'saiki_django.wsgi.application'
+WSGI_APPLICATION: str = 'saiki_django.wsgi.application'
 
 
-# Database
+"""
+    Databases
+"""
+
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASES: dict = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    },
+
+    "saiki_data_db": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "saiki_data_db.sqlite3",
     }
 }
+
+DATABASES_ROUTERS = ["saiki_django.routers.SaikiDataRouter"]
 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS: list[dict] = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -120,26 +127,28 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE: str = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE: str = 'UTC'
 
-USE_I18N = True
+USE_I18N: bool = True
 
-USE_TZ = True
+USE_TZ: bool = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL: str = "/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
+import os
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-# STATICFILES_DIRS = [
+
+# STATICFILES_DIRS: list = [
 #     path.join(BASE_DIR, "../frontend/"),
 # ]
 
@@ -155,7 +164,7 @@ print("BASE_DIR =", BASE_DIR)
 print("STATICFILES_DIRS =", STATICFILES_DIRS)
 print("STATIC_ROOT =", STATIC_ROOT)
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD: str = 'django.db.models.BigAutoField'
 
 
 """ Cross-Origin Resource Sharing

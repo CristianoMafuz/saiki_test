@@ -4,10 +4,10 @@ backend/saiki_site/views.py
 Viewing configuration for saiki_site Django's application.
 """
 
-from django.shortcuts import render, redirect
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+
 from .guesser import guesser, GuessState
 from typing import Any
 import json
@@ -18,10 +18,8 @@ class FrontendView(object):
 
     @staticmethod
     def serve_frontend(req) -> HttpResponse:
-        """Provides the frontend main page.
-
-            @TODO: This method can and may have variations concerning the different web pages."""
-
+        """Provides the frontend main page."""
+        
         from os import path
 
         # inferring the request...
@@ -35,9 +33,26 @@ class FrontendView(object):
         with open(index_path, encoding="utf-8") as index:
             return HttpResponse(index.read(), content_type="text/html")
 
+    @staticmethod
+    def serve_custom_mode(request):
+        return render(request, "custom.html")
+
+    @staticmethod
+    def serve_daily_mode(request):
+        return render(request, "index.html")
+
+    @staticmethod
+    def serve_tof_mode(request):
+        return render(request, "trueOrFalse.html")
+
 
 class GuessView(object):
     """Handles the view of the Guess game mode."""
+
+    @staticmethod
+    def empty() -> JsonResponse:
+        """Represents an empty JSON response."""
+        return JsonResponse({})
 
     @staticmethod
     @csrf_exempt  # Cookies~
@@ -45,73 +60,26 @@ class GuessView(object):
         """Processes the request of a hint, via POST."""
 
         if req.method != "POST":
-            # empty return~
-            return JsonResponse({})
+            return GuessView.empty()
 
         try:
-            data = json.loads(req.body)
+            data: dict = json.loads(req.body)
             name: str = data.get("attempt")
 
             if not isinstance(name, str):
                 raise TypeError
 
         except TypeError | KeyError as e:
-            name: str = "undef"
             print(e)
+            return GuessView.empty()
+
+        guess_state: GuessState = GuessState.from_request(req)
+        matches: list[str] = guesser.match_name(guess_state, name)
 
         return JsonResponse({
-            "name": name.upper()
+            "number_of_matches": len(matches),
+            "closest_matches": matches
         })
-
-    @staticmethod
-    def __check_fields(state: GuessState, entity_name: str) -> JsonResponse:
-        """Checks the fields of the player's guessing (and returns the response)."""
-
-        # making sure the state have a selected entity.
-        guesser.select_entity(state)
-
-        # the entity that is marked to be solved by the player.
-        from .enc import unpermute
-        real_selected_index: int = unpermute(state.selected, state.key, 1000)
-        correct_entity: dict = guesser.get_entity(real_selected_index)
-
-        # the one matching what he inserted.
-        match_entity: dict | None
-        match_entity_index: int
-        match_entity, match_entity_index = guesser.fetch_entity(entity_name)
-
-        # will hold the JSON response back to the user.
-        response: dict = {}
-
-        if match_entity is not None:
-            # meaning that at least it was found on the database...
-
-            response: dict = {
-                "name": match_entity["name"],
-                "data": {},
-                "type": "correct"
-            }
-
-            for field in match_entity["data"]:
-
-                # if the field is correct, for all effects.
-                guess_type: str = "correct" if match_entity["data"][field] == correct_entity["data"][field] else "wrong"
-
-                # adding the respective field to the response...
-                response["data"][field] = [match_entity["data"][field], guess_type]
-
-                if response["type"] == "correct":
-                    # if the response is correct up to now, it can potentially make the whole answer wrong.
-                    response["type"] = guess_type
-
-            state.add_attempt(match_entity_index)
-        
-        response_json: JsonResponse = JsonResponse(response)
-
-        to_reset_cookies: bool = response["type"] == "correct" if "type" in response else False
-        state.set_cookie(response_json, to_reset_cookies)
-
-        return response_json
 
     @staticmethod
     @csrf_exempt  # Cookies~
@@ -119,8 +87,7 @@ class GuessView(object):
         """Processes the request of an entity, via POST."""
 
         if req.method != "POST":
-            # empty return~
-            return JsonResponse({})
+            return GuessView.empty()
 
         data: dict[str, Any] = json.loads(req.body)
 
@@ -128,36 +95,36 @@ class GuessView(object):
             entity: str = data["entity"]
 
         except KeyError:
-            return JsonResponse({})
+            return GuessView.empty()
 
-        guess_state: GuessState = GuessState.from_request(req)
-        return GuessView.__check_fields(guess_state, entity)
-
-
-class OtherView(object):
+        # guess_state: GuessState = GuessState.from_request(req)
+        # return GuessView.__check_fields(guess_state, entity)
+        return GuessState.from_request(req).guess(entity)
 
     @staticmethod
-    def read_root(req) -> JsonResponse:
-        return JsonResponse(
-            {
-                "msg": "Hello from backend! Camarada"
-            }
-        )
+    @csrf_exempt
+    def request_load(req: WSGIRequest) -> JsonResponse:
+        """Returns the corresponding data on the cookies, form"""
+
+        if req.method != "POST":
+            return GuessView.empty()
+
+        # for instance, ignores the JSON data, as it isn't needed...
+        data = json.loads(req.body)
+
+        guess_state: GuessState = GuessState.from_request(req)
+        return guess_state.get_collection(data)
 
 
-def read_root1(req) -> JsonResponse:
-    return JsonResponse(
-        {
-            "msg": "Helicóptero"
-        }
-    )
 
-
-# -------------------------------------------------------------------------------------------
-from .forms import JogadorForm, JogadorLoginForm
-from .models import Jogador
+#-------------------------------------------------------------------------------------------
+from .forms import JogadorForm, JogadorLoginForm, MessageForm
+from .models import Jogador, Session, message
 from django.contrib import messages
 from django.contrib.auth import login
+from django.utils import timezone
+import time
+
 
 
 def jogador_login(request):
@@ -193,7 +160,6 @@ def painel_jogador(request):
 
 
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
 
 
 def jogador_create(request):
@@ -221,3 +187,103 @@ def jogador_create(request):
 
 def jogador_success(request):
     return HttpResponse("Jogador criado com sucesso!")
+
+
+
+def criar_sessao(request):
+    if not request.user.is_authenticated:
+        return redirect('login')  # ou outra view
+
+    jogador = Jogador.objects.get(user=request.user)
+
+    # Gera chave única com name_user + timestamp
+    timestamp = int(time.time())
+    public_key = f"{jogador.name_user}_{timestamp}"
+
+    # Cria a sessão (chat será criado automaticamente no save())
+    sessao = Session.objects.create(
+        public_key=public_key,
+        root_player=jogador,
+    )
+
+    return redirect('ver_sessao', sessao_id=sessao.id)
+
+from django.shortcuts import render, get_object_or_404, redirect
+
+def ver_sessao(request, sessao_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    jogador = Jogador.objects.get(user=request.user)
+    sessao = get_object_or_404(Session, id=sessao_id)
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid() and sessao.status:
+            texto = form.cleaned_data['texto']
+
+            # Cria a mensagem com o remetente
+            nova_msg = message.objects.create(sender=jogador, texto=texto)
+
+            # Define todos com acesso ao chat como destinatários, incluindo o próprio sender
+            destinatarios = sessao.players.all()  # ou: sessao.chat.participants.all() se preferir
+            nova_msg.receivers.set(destinatarios)
+            nova_msg.save()
+
+            # Adiciona a mensagem ao chat
+            sessao.chat.add_message(nova_msg)
+
+            # Garante que todos os jogadores estejam nos participantes do chat
+            sessao.chat.participants.add(*destinatarios)
+
+            return redirect('ver_sessao', sessao_id=sessao.id)
+
+    else:
+        form = MessageForm()
+
+    tempo_corrente = timezone.now() - sessao.data_inicio if sessao.status else sessao.session_time
+    mensagens = sessao.chat.messages.order_by('timestamp')
+
+    return render(request, 'sessao.html', {
+        'sessao': sessao,
+        'jogador': jogador,
+        'mensagens': mensagens,
+        'tempo_corrente': tempo_corrente,
+        'form': form,
+    })
+    
+def encerrar_sessao(request, sessao_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    sessao = get_object_or_404(Session, id=sessao_id)
+    if request.user == sessao.root_player.user:
+        sessao.end_session()
+
+    return redirect('ver_sessao', sessao_id=sessao_id)
+
+def entrar_sessao(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if request.method == 'POST':
+        chave = request.POST.get('chave_publica')
+        jogador = Jogador.objects.get(user=request.user)
+
+        try:
+            sessao = Session.objects.get(public_key=chave, status=True)
+        except Session.DoesNotExist:
+            messages.error(request, "Sessão não encontrada ou inativa.")
+            return redirect('painel_jogador')
+
+        # Adiciona o jogador à sessão e ao chat se ainda não estiver
+        if jogador not in sessao.players.all():
+            sessao.players.add(jogador)
+        if jogador not in sessao.active_players.all():
+            sessao.active_players.add(jogador)
+        if jogador not in sessao.chat.participants.all():
+            sessao.chat.participants.add(jogador)
+
+        return redirect('ver_sessao', sessao_id=sessao.id)
+
+    return redirect('painel_jogador')
