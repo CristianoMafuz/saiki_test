@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Adiciona a pasta raiz do projeto (que contém "core", "saiki_site", etc.)
 # ao caminho de busca do Python.
-sys.path.insert(0, str(BASE_DIR / "core"))
+import sys
+import os
+sys.path.insert(0, os.path.dirname(BASE_DIR))
 
 
 
